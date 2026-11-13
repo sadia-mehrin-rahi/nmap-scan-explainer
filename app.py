@@ -66,6 +66,17 @@ def explain_scan(scan_text: str, api_key: str) -> dict:
     return json.loads(response.choices[0].message.content)
 
 
+def get_api_key() -> str | None:
+    """Read the key from the environment (.env locally) or from Streamlit secrets (when deployed)."""
+    key = os.getenv("GROQ_API_KEY")
+    if key:
+        return key
+    try:
+        return st.secrets["GROQ_API_KEY"]
+    except Exception:  # no secrets file, or the key is not in it
+        return None
+
+
 def load_samples() -> dict:
     """Return {file name: text} for every .txt file in the samples folder."""
     if not SAMPLES_DIR.exists():
@@ -93,10 +104,10 @@ else:
 scan_text = st.text_area("Nmap output", value=default_text, height=260)
 
 if st.button("Explain scan", type="primary"):
-    api_key = os.getenv("GROQ_API_KEY")
+    api_key = get_api_key()
 
     if not api_key:
-        st.error("GROQ_API_KEY is not set. Add it to a .env file or to the Space secrets.")
+        st.error("GROQ_API_KEY is not set. Add it to a .env file or to the app secrets.")
     elif not scan_text.strip():
         st.warning("Paste an nmap scan first.")
     elif len(scan_text) > MAX_INPUT_CHARS:

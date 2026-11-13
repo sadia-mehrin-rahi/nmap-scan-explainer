@@ -4,6 +4,8 @@ Paste the output of an nmap scan and get a plain-language explanation of every o
 
 Nmap output is easy to produce and hard to read if you are new to security. This tool sends the scan to an LLM, asks for a structured answer, and shows it as a table sorted by risk.
 
+**Live Demo:** https://nmap-scan-explainer.streamlit.app/
+
 ![Example result for scanme.nmap.org](screenshot.png)
 
 ## How it works
